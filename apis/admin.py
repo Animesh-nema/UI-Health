@@ -1,110 +1,178 @@
 from flask import Blueprint
 from flask import Flask, jsonify, render_template, request, url_for, redirect
-from model import db
+from model import Vaccine, db
 
 admin_bp = Blueprint('admin', __name__)
-from model import User, Nurse, Patient, Vaccine, TimeSlot, NurseSchedule
+from model import User, Nurse, Patient
 
 @admin_bp.route('/nurse', methods=['POST'])
 def create_nurse():
-    data = request.json  # Assuming the data is sent in JSON format in the request body
-    # Extract user data
-    email = data.get('email')
+    try:
+        data = request.json
+        email = data['email']
+        if not email:
+                return jsonify({'error': 'Email is required'}), 400
 
-    # Extract nurse data
-    nurse_data = data.get('nurse')
-    first_name = data.get('First_Name')
-    middle_initial = data.get('Middle_Initial')
-    last_name = data.get('Last_Name')
-    age = data.get('Age')
-    gender = data.get('Gender')
-    phone_number = data.get('Phone_Number')
-    address = data.get('Address')
-    nurse_username = data.get('username')
-    nurse_password = data.get('password')
+        first_name = data.get('First_Name')
+        middle_initial = data.get('Middle_Initial')
+        employee_id = data.get('EmployeeID')
+        last_name = data.get('Last_Name')
+        age = data.get('Age')
+        gender = data.get('Gender')
+        phone_number = data.get('Phone_Number')
+        address = data.get('Address')
+        nurse_username = data.get('username')
+        nurse_password = data.get('password')
 
-    # Create a new user
-    new_user = User(username=nurse_username, email=email, role_id = 2)
-    new_user.set_password(nurse_password)  # Set the password using the set_password method
-    db.session.add(new_user)
-    db.session.commit()
+        new_user = User(username=nurse_username, email=email, role_id = 2)
+        new_user.set_password(nurse_password)  # Set the password using the set_password method
+        db.session.add(new_user)
+        db.session.commit()
 
-    # Create a new nurse
-    new_nurse = Nurse(
-        First_Name=first_name,
-        Middle_Initial=middle_initial,
-        Last_Name=last_name,
-        Age=age,
-        Gender=gender,
-        Phone_Number=phone_number,
-        Address=address,
-        username=nurse_username,  # Added nurse-specific details
-        password=nurse_password,
-        user=new_user  # Associate the nurse with the user
-    )
-    db.session.add(new_nurse)
-    db.session.commit()
+        new_nurse = Nurse(
+            EmployeeID=employee_id,
+            First_Name=first_name,
+            Middle_Initial=middle_initial,
+            Last_Name=last_name,
+            Age=age,
+            Gender=gender,
+            Phone_Number=phone_number,
+            Address=address,
+            user_id=new_user.id
+        )
+        db.session.add(new_nurse)
+        db.session.commit()
+        return jsonify({'message': 'Nurse registered successfully'})
+    
+    except Exception as e:
+        print(f"Error creating nurse: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Internal Server Error'}), 500
 
-    return jsonify({'message': 'Nurse registered successfully'})
+@admin_bp.route('/nurse/<int:id>', methods=['PUT'])
+def update_nurse(id):
+    try:
+        nurse = Nurse.query.get(id)
+        if nurse:
+            data = request.json
+            nurse.First_Name = data.get('First_Name')
+            nurse.Middle_Initial = data.get('Middle_Initial')
+            nurse.last_name = data.get('Last_Name')
+            nurse.Age = data.get('Age')
+            nurse.Gender = data.get('Gender')
+            db.session.commit()
+            return jsonify({'message': 'Nurse updated successfully'})
+        return {'message': 'Nurse not found'}, 404
+    except Exception as e:
+        print(f"Error updating nurse: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Internal Server Error'}), 500
+    
+@admin_bp.route('/patient/<int:patient_id>', methods=['GET'])
+def get_patient(patient_id):
+    try:
+        patient = Patient.query.get(patient_id)
 
+        if patient:
+            patient_data = {
+                'SSN': patient.SSN,
+                'First_Name': patient.First_Name,
+                'Middle_Initial': patient.Middle_Initial,
+                'Last_Name': patient.Last_Name,
+                'Age': patient.Age,
+                'Gender': patient.Gender,
+                'Race': patient.Race,
+                'Occupation_Class': patient.Occupation_Class,
+                'Medical_History_Description': patient.Medical_History_Description,
+                'Phone_Number': patient.Phone_Number,
+                'Address': patient.Address,
+                'user_id': patient.user_id
+            }
 
-@admin_bp.route('/nurse/<int:id>', methods=['GET'])
-def get_post(id):
-    post = TimeSlot.query.get(id)
-    # return jsonify(post.nurse_schedule)
-    nurses_data = []
-    for nurse in post.nurse_schedule:
-        nurses_data.append({
-            'Maximum_Capacity': nurse.NurseEmployeeID,
-            # 'first_name': nurse.First_Name,
-            # 'last_name': nurse.Last_Name,
-            # Add other nurse attributes as needed
-        })
-    # return nurses_data
+            return jsonify(patient_data)
+        else:
+            return jsonify({'error': 'Patient not found'}), 404
 
-    return {
-            # 'user_id': post.id,
-            # 'username': post.username,
-            # 'email': post.email,
-            'nurses': nurses_data,
+    except Exception as e:
+        print(f"Error getting patient: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500
+    
+@admin_bp.route('/vaccines', methods=['GET'])
+def get_vaccines():
+    try:
+        vaccines = Vaccine.query.all()
+        vaccine_list = []
+        for vaccine in vaccines:
+            vaccine_data = {
+                'VaccineID': vaccine.VaccineID,
+                'Name': vaccine.Name,
+                'Company': vaccine.Company,
+                'Number_of_Doses': vaccine.Number_of_Doses,
+                'Description': vaccine.Description,
+                'Availability': vaccine.Availability,
+                'OnHold': vaccine.OnHold
+            }
+            vaccine_list.append(vaccine_data)
+        return jsonify(vaccine_list)
+
+    except Exception as e:
+        print(f"Error getting vaccines: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500
+    
+@admin_bp.route('/patient-info/<int:patient_id>', methods=['GET'])
+def get_patient_info(patient_id):
+    try:
+        patient = Patient.query.get(patient_id)
+
+        if not patient:
+            return jsonify({'error': 'Patient not found'}), 404
+
+        patient_info = {
+            'SSN': patient.SSN,
+            'First_Name': patient.First_Name,
+            'Middle_Initial': patient.Middle_Initial,
+            'Last_Name': patient.Last_Name,
+            'Age': patient.Age,
+            'Gender': patient.Gender,
+            'Race': patient.Race,
+            'Occupation_Class': patient.Occupation_Class,
+            'Medical_History_Description': patient.Medical_History_Description,
+            'Phone_Number': patient.Phone_Number,
+            'Address': patient.Address,
+            'user_id': patient.user_id
+            }
+
+        scheduled_times = []
+        for schedule in patient.vaccination_schedules:
+            if schedule.Status == "Scheduled":
+                scheduled_times.append({
+                    'ScheduleID': schedule.ScheduleID,
+                    'VaccineName': schedule.vaccine.Name,
+                    'Date': schedule.time_slot.Date.strftime('%Y-%m-%d'),
+                    'StartTime': schedule.time_slot.StartTime.strftime('%H:%M:%S'),
+                    'EndTime': schedule.time_slot.EndTime.strftime('%H:%M:%S'),
+                    'Status': schedule.Status
+                })
+
+        vaccination_history = []
+        for record in patient.vaccination_records:
+            vaccination_history.append({
+                'RecordID': record.RecordID,
+                'VaccineName': record.vaccine.Name,
+                'TimeSlotID': record.TimeSlotID,
+                'DoseNumber': record.DoseNumber,
+                'status': 'Completed',
+                'Vaccination_Time': record.Vaccination_Time.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        result = {
+            'patient_info': patient_info,
+            'scheduled_times': scheduled_times,
+            'vaccination_history': vaccination_history
         }
-    # return([post])
-    # if post:
-    #         return {
-    #             'id': post.nurses.First_Name,
-    #             'title': post.username,
-    #             # 'content': post.content,
-    #             # 'user_id': post.user_id,
-    #             # 'author_username': post.user.username,
-    #     }
-    # return {'message': 'Post not found'}, 404
 
-# @admin_bp.route('/nurse/<int:id>', methods=['GET'])
-# def get_post(id):
-#     print(id,"dii")
-#     post = User.query.get(id)
-#     nurses_data = []
-#     for nurse in post.nurses:
-#         nurses_data.append({
-#             'nurse_id': nurse.EmployeeID,
-#             'first_name': nurse.First_Name,
-#             'last_name': nurse.Last_Name,
-#             # Add other nurse attributes as needed
-#         })
+        return jsonify(result)
 
-#     return {
-#             'user_id': post.id,
-#             'username': post.username,
-#             'email': post.email,
-#             'nurses': nurses_data,
-#         }
-#     # return([post])
-#     if post:
-#             return {
-#                 'id': post.nurses.First_Name,
-#                 'title': post.username,
-#                 # 'content': post.content,
-#                 # 'user_id': post.user_id,
-#                 # 'author_username': post.user.username,
-#         }
-#     return {'message': 'Post not found'}, 404
+    except Exception as e:
+        print(f"Error getting patient information: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500

@@ -86,6 +86,8 @@ class Patient(db.Model):
     Address = Column(String(255))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User')
+    vaccination_schedules = relationship('VaccinationSchedule', back_populates='patient')
+    vaccination_records = relationship('VaccinationRecord', back_populates='patient')
 
 # Define the VaccinationRecord model.
 class VaccinationRecord(db.Model):
@@ -98,6 +100,7 @@ class VaccinationRecord(db.Model):
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
     DoseNumber = Column(Integer, nullable=False)
     Vaccination_Time = Column(DateTime)
+    patient = relationship('Patient', back_populates='vaccination_records')
 
     patient = relationship('Patient')
     nurse = relationship('Nurse')
@@ -126,6 +129,7 @@ class VaccinationSchedule(db.Model):
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
     DoseNumber = Column(Integer, nullable=False)
     Status = Column(Enum('Scheduled', 'Completed', 'Canceled'))
+    patient = relationship('Patient', back_populates='vaccination_schedules')
 
     patient = relationship('Patient')
     vaccine = relationship('Vaccine')
