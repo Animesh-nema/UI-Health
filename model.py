@@ -22,8 +22,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     password = db.Column(db.String(60), nullable=False)  # Store hashed passwords
-
-    user = relationship('User')
+    nurses = relationship('Nurse', back_populates='user') 
+    patient = relationship('Patient', back_populates='user') 
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -56,6 +56,7 @@ class Nurse(db.Model):
     Address = Column(String(255))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User')
+    nurse_schedule = relationship('NurseSchedule', back_populates='nurse') 
 
 # Define the TimeSlot model.
 class TimeSlot(db.Model):
@@ -66,6 +67,7 @@ class TimeSlot(db.Model):
     StartTime = Column(DateTime, nullable=False)
     EndTime = Column(DateTime, nullable=False)
     Maximum_Capacity = Column(Integer, default=100, nullable=False)
+    nurse_schedule = relationship('NurseSchedule', back_populates='time_slot')
 
 # Define the Patient model.
 class Patient(db.Model):
@@ -109,6 +111,7 @@ class NurseSchedule(db.Model):
     ScheduleID = Column(Integer, primary_key=True)
     NurseEmployeeID = Column(Integer, ForeignKey('nurse.EmployeeID'))
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
+    TimeSlotDetails = relationship('TimeSlot', back_populates='nurse_schedule') 
 
     nurse = relationship('Nurse')
     time_slot = relationship('TimeSlot')
