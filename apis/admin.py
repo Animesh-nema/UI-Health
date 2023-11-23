@@ -177,6 +177,7 @@ def get_patient_info(patient_id):
     except Exception as e:
         print(f"Error getting patient information: {str(e)}")
         return jsonify({'error': 'Internal Server Error'}), 500
+    
 @admin_bp.route('/nurse', methods=['GET'])
 def get_all_nurses():
     nurses = Nurse.query.all()
