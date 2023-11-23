@@ -118,3 +118,61 @@ def get_vaccines():
     except Exception as e:
         print(f"Error getting vaccines: {str(e)}")
         return jsonify({'error': 'Internal Server Error'}), 500
+    
+@admin_bp.route('/patient-info/<int:patient_id>', methods=['GET'])
+def get_patient_info(patient_id):
+    try:
+        patient = Patient.query.get(patient_id)
+
+        if not patient:
+            return jsonify({'error': 'Patient not found'}), 404
+
+        patient_info = {
+            'SSN': patient.SSN,
+            'First_Name': patient.First_Name,
+            'Middle_Initial': patient.Middle_Initial,
+            'Last_Name': patient.Last_Name,
+            'Age': patient.Age,
+            'Gender': patient.Gender,
+            'Race': patient.Race,
+            'Occupation_Class': patient.Occupation_Class,
+            'Medical_History_Description': patient.Medical_History_Description,
+            'Phone_Number': patient.Phone_Number,
+            'Address': patient.Address,
+            'user_id': patient.user_id
+            }
+
+        scheduled_times = []
+        for schedule in patient.vaccination_schedules:
+            if schedule.Status == "Scheduled":
+                scheduled_times.append({
+                    'ScheduleID': schedule.ScheduleID,
+                    'VaccineName': schedule.vaccine.Name,
+                    'Date': schedule.time_slot.Date.strftime('%Y-%m-%d'),
+                    'StartTime': schedule.time_slot.StartTime.strftime('%H:%M:%S'),
+                    'EndTime': schedule.time_slot.EndTime.strftime('%H:%M:%S'),
+                    'Status': schedule.Status
+                })
+
+        vaccination_history = []
+        for record in patient.vaccination_records:
+            vaccination_history.append({
+                'RecordID': record.RecordID,
+                'VaccineName': record.vaccine.Name,
+                'TimeSlotID': record.TimeSlotID,
+                'DoseNumber': record.DoseNumber,
+                'status': 'Completed',
+                'Vaccination_Time': record.Vaccination_Time.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        result = {
+            'patient_info': patient_info,
+            'scheduled_times': scheduled_times,
+            'vaccination_history': vaccination_history
+        }
+
+        return jsonify(result)
+
+    except Exception as e:
+        print(f"Error getting patient information: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500
