@@ -3,12 +3,16 @@ from flask import Flask
 from flask_cors import CORS
 from model import db
 from flask_migrate import Migrate
+from apis import users
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/UI-Health'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
+
+
+app.register_blueprint(users.users_bp)
 
 migrate = Migrate(app, db)
 
