@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import Flask, jsonify, render_template, request, url_for, redirect
 from model import Vaccine, db
+from datetime import time
 
 admin_bp = Blueprint('admin', __name__)
 from model import User, Nurse, Patient
@@ -176,3 +177,115 @@ def get_patient_info(patient_id):
     except Exception as e:
         print(f"Error getting patient information: {str(e)}")
         return jsonify({'error': 'Internal Server Error'}), 500
+@admin_bp.route('/nurse', methods=['GET'])
+def get_all_nurses():
+    nurses = Nurse.query.all()
+    nurse_list = []
+
+    for nurse in nurses:
+        nurse_data = {
+            'EmployeeID': nurse.EmployeeID,
+            'Name':  f"{nurse.First_Name} {nurse.Middle_Initial or ''} {nurse.Last_Name}",
+            'Age': nurse.Age,
+            'Gender': nurse.Gender,
+            'Phone_Number': nurse.Phone_Number,
+            'Address': nurse.Address
+        }
+        nurse_list.append(nurse_data)
+
+    return jsonify(nurse_list)
+
+
+@admin_bp.route('/nurse/<int:nurse_id>', methods=['GET'])
+def get_nurse(nurse_id):
+    # Fetch nurse information from the database by EmployeeID
+    nurse = Nurse.query.get(nurse_id)
+
+    if nurse:
+        schedule_info=[]
+        for schedule in nurse.nurse_schedule:
+            data = {
+                'Date': schedule.TimeSlotDetails.Date,
+                'StartTime':schedule.TimeSlotDetails.StartTime.strftime("%H:%M:%S"),
+                'EndTime': schedule.TimeSlotDetails.EndTime.strftime("%H:%M:%S"),
+            }
+            schedule_info.append(data)
+
+        nurse_info = {
+            'EmployeeID': nurse.EmployeeID,
+            'First_Name': nurse.First_Name,
+            'Middle_Initial': nurse.Middle_Initial,
+            'Last_Name': nurse.Last_Name,
+            'Age': nurse.Age,
+            'Gender': nurse.Gender,
+            'Phone_Number': nurse.Phone_Number,
+            'Address': nurse.Address,
+            'schedules': schedule_info,
+        }
+        return jsonify(nurse_info)
+    else:
+        return jsonify({'error': 'Nurse not found'}), 404
+
+@admin_bp.route('/nurse/<int:nurse_id>',methods=['DELETE'])
+def delete_nurse(nurse_id):
+    nurse = Nurse.query.get(nurse_id)
+    if nurse:
+        db.session.delete(nurse)
+        db.session.commit()
+        return jsonify({'message': 'Nurse deleted successfully'}), 200
+    else:
+        return jsonify({'error': 'Nurse not found'}), 404
+
+@admin_bp.route('/patients', methods=['GET'])
+def get_all_patients():
+    patients = Patient.query.all()
+    patient_list = []
+
+    for patient in patients:
+        patient_data = {
+            'SSN': patient.SSN,
+            'First_Name': patient.First_Name,
+            'Middle_Initial': patient.Middle_Initial,
+            'Last_Name': patient.Last_Name,
+            'Age': patient.Age,
+            'Gender': patient.Gender,
+            'Race': patient.Race,
+            'Occupation_Class': patient.Occupation_Class,
+            'Medical_History_Description': patient.Medical_History_Description,
+            'Phone_Number': patient.Phone_Number,
+            'Address': patient.Address
+            # Add other fields if needed
+        }
+        patient_list.append(patient_data)
+
+    return jsonify({'patients': patient_list})
+
+
+@admin_bp.route('/vaccine/add', methods=['POST'])
+def add_vaccine():
+    # Get data from the POST request
+    data = request.get_json()
+
+    # Extract vaccine details from the request data
+    name = data.get('Name')
+    company = data.get('Company')
+    number_of_doses = data.get('Number_of_Doses')
+    description = data.get('Description')
+    availability = data.get('Availability', 0)  # Default value if not provided
+    on_hold = data.get('OnHold', 0)  # Default value if not provided
+
+    # Create a new Vaccine object
+    new_vaccine = Vaccine(
+        Name=name,
+        Company=company,
+        Number_of_Doses=number_of_doses,
+        Description=description,
+        Availability=availability,
+        OnHold=on_hold
+    )
+
+    # Add the new vaccine to the database
+    db.session.add(new_vaccine)
+    db.session.commit()
+
+    return jsonify({'message': 'Vaccine added successfully'})

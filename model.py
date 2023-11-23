@@ -1,6 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime
 from flask_bcrypt import Bcrypt 
@@ -64,8 +64,8 @@ class TimeSlot(db.Model):
 
     SlotID = Column(Integer, primary_key=True)
     Date = Column(DateTime)
-    StartTime = Column(DateTime, nullable=False)
-    EndTime = Column(DateTime, nullable=False)
+    StartTime = Column(Time, nullable=False)
+    EndTime = Column(Time, nullable=False)
     Maximum_Capacity = Column(Integer, default=100, nullable=False)
     nurse_schedule = relationship('NurseSchedule', back_populates='time_slot')
 
