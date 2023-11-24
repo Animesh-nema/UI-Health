@@ -145,3 +145,44 @@ def schedule_vaccination():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@patient_bp.route('/patientAction/patient/<int:ssn>', methods=['PUT'])
+def update_patient(ssn):
+    patient = Patient.query.get(ssn)
+
+    if not patient:
+        return jsonify({'error': 'Patient not found'}), 404
+
+    data = request.get_json()
+    patient.First_Name = data.get('First_Name', patient.First_Name)
+    patient.Middle_Initial = data.get('Middle_Initial', patient.Middle_Initial)
+    patient.Last_Name = data.get('Last_Name', patient.Last_Name)
+    patient.Age = data.get('Age', patient.Age)
+    patient.Gender = data.get('Gender', patient.Gender)
+    patient.Race = data.get('Race', patient.Race)
+    patient.Occupation_Class = data.get('Occupation_Class', patient.Occupation_Class)
+    patient.Medical_History_Description = data.get('Medical_History_Description', patient.Medical_History_Description)
+    patient.Phone_Number = data.get('Phone_Number', patient.Phone_Number)
+    patient.Address = data.get('Address', patient.Address)
+    db.session.commit()
+
+    return jsonify({'message': 'Patient information updated successfully'})
+
+
+@patient_bp.route('/patientAction/time-slots', methods=['GET'])
+def get_all_time_slots():
+    time_slots = TimeSlot.query.all()
+    if time_slots:
+        time_slot_info = []
+        for slot in time_slots:
+            data = {
+                'SlotID': slot.SlotID,
+                'Date': slot.Date.strftime("%Y-%m-%d"),
+                'StartTime': slot.StartTime.strftime("%H:%M:%S"),
+                'EndTime': slot.EndTime.strftime("%H:%M:%S"),
+            }
+            time_slot_info.append(data)
+        return jsonify({'time_slots': time_slot_info})
+    else:
+        return jsonify({'message': 'No time slots available'}), 404
