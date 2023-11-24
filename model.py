@@ -1,6 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime
 from flask_bcrypt import Bcrypt 
@@ -22,8 +22,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     password = db.Column(db.String(60), nullable=False)  # Store hashed passwords
-
-    user = relationship('User')
+    nurses = relationship('Nurse', back_populates='user') 
+    patient = relationship('Patient', back_populates='user') 
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -56,6 +56,7 @@ class Nurse(db.Model):
     Address = Column(String(255))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User')
+    nurse_schedule = relationship('NurseSchedule', back_populates='nurse') 
 
 # Define the TimeSlot model.
 class TimeSlot(db.Model):
@@ -63,9 +64,10 @@ class TimeSlot(db.Model):
 
     SlotID = Column(Integer, primary_key=True)
     Date = Column(DateTime)
-    StartTime = Column(DateTime, nullable=False)
-    EndTime = Column(DateTime, nullable=False)
+    StartTime = Column(Time, nullable=False)
+    EndTime = Column(Time, nullable=False)
     Maximum_Capacity = Column(Integer, default=100, nullable=False)
+    nurse_schedule = relationship('NurseSchedule', back_populates='time_slot')
 
 # Define the Patient model.
 class Patient(db.Model):
@@ -84,6 +86,8 @@ class Patient(db.Model):
     Address = Column(String(255))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User')
+    vaccination_schedules = relationship('VaccinationSchedule', back_populates='patient')
+    vaccination_records = relationship('VaccinationRecord', back_populates='patient')
 
 # Define the VaccinationRecord model.
 class VaccinationRecord(db.Model):
@@ -96,6 +100,7 @@ class VaccinationRecord(db.Model):
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
     DoseNumber = Column(Integer, nullable=False)
     Vaccination_Time = Column(DateTime)
+    patient = relationship('Patient', back_populates='vaccination_records')
 
     patient = relationship('Patient')
     nurse = relationship('Nurse')
@@ -109,6 +114,7 @@ class NurseSchedule(db.Model):
     ScheduleID = Column(Integer, primary_key=True)
     NurseEmployeeID = Column(Integer, ForeignKey('nurse.EmployeeID'))
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
+    TimeSlotDetails = relationship('TimeSlot', back_populates='nurse_schedule') 
 
     nurse = relationship('Nurse')
     time_slot = relationship('TimeSlot')
@@ -123,6 +129,7 @@ class VaccinationSchedule(db.Model):
     TimeSlotID = Column(Integer, ForeignKey('time_slot.SlotID'))
     DoseNumber = Column(Integer, nullable=False)
     Status = Column(Enum('Scheduled', 'Completed', 'Canceled'))
+    patient = relationship('Patient', back_populates='vaccination_schedules')
 
     patient = relationship('Patient')
     vaccine = relationship('Vaccine')
