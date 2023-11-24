@@ -142,3 +142,15 @@ def record_vaccination():
         print(f"Error recording vaccination: {str(e)}")
         db.session.rollback()
         return jsonify({'error': 'Internal Server Error'}), 500
+
+@nurse_bp.route('/nurseAction/nurse/<int:nurse_id>/timeslot/<int:timeslot_id>', methods=['DELETE'])
+def cancel_nurse_timeslot(nurse_id, timeslot_id):
+    nurse_schedule = NurseSchedule.query.filter_by(NurseEmployeeID=nurse_id, TimeSlotID=timeslot_id).first()
+
+    if nurse_schedule:
+        db.session.delete(nurse_schedule)
+        db.session.commit()
+        return jsonify({'message': 'Nurse schedule timeslot canceled successfully'})
+    else:
+        return jsonify({'error': 'Nurse schedule timeslot not found'}), 404
+
