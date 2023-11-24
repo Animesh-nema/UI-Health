@@ -3,7 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from model import db
 from flask_migrate import Migrate
-from apis import admin
+from apis import admin, nurse, patient
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -13,6 +13,8 @@ CORS(app)
 
 
 app.register_blueprint(admin.admin_bp)
+app.register_blueprint(nurse.nurse_bp)
+app.register_blueprint(patient.patient_bp)
 
 migrate = Migrate(app, db)
 
