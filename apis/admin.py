@@ -255,7 +255,6 @@ def get_all_patients():
             'Medical_History_Description': patient.Medical_History_Description,
             'Phone_Number': patient.Phone_Number,
             'Address': patient.Address
-            # Add other fields if needed
         }
         patient_list.append(patient_data)
 
@@ -264,18 +263,15 @@ def get_all_patients():
 
 @admin_bp.route('/vaccine/add', methods=['POST'])
 def add_vaccine():
-    # Get data from the POST request
     data = request.get_json()
 
-    # Extract vaccine details from the request data
     name = data.get('Name')
     company = data.get('Company')
     number_of_doses = data.get('Number_of_Doses')
     description = data.get('Description')
-    availability = data.get('Availability', 0)  # Default value if not provided
-    on_hold = data.get('OnHold', 0)  # Default value if not provided
+    availability = data.get('Availability', 0)
+    on_hold = data.get('OnHold', 0)
 
-    # Create a new Vaccine object
     new_vaccine = Vaccine(
         Name=name,
         Company=company,
@@ -284,9 +280,6 @@ def add_vaccine():
         Availability=availability,
         OnHold=on_hold
     )
-
-    # Add the new vaccine to the database
     db.session.add(new_vaccine)
     db.session.commit()
-
     return jsonify({'message': 'Vaccine added successfully'})
