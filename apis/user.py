@@ -14,12 +14,18 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):
+        entity_id = None
+        if(user.role_id == 2):
+            entity_id = user.nurses[0].EmployeeID
+        elif (user.role_id == 3):
+             entity_id = user.patient[0].SSN
+            
         user_data = {
             'id': user.id,
             'username': user.username,
             'email': user.email,
-            'role_id': user.role_id
-            # Add other user details as needed
+            'role_id': user.role_id,
+            'entity_id': entity_id
         }
         return jsonify({'success':True,'user': user_data, 'message': 'Login successful'})
     else:
