@@ -1,8 +1,48 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:5000"; // Replace with your actual backend URL
+const API_URL = "http://127.0.0.1:5000";
 
 const ApiService = {
+  registerNurse: async (payload) => {
+    try {
+      const response = await axios.post(`${API_URL}/nurse`, payload);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getVaccines: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/vaccines`);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  addVaccine: async (payload) => {
+    try {
+      const response = await axios.post(`${API_URL}/vaccine/add`, payload);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getPatients: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/patients`);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getPatientInfo: async (patientId) => {
+    try {
+      const response = await axios.get(`${API_URL}/patient-info/${patientId}`);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
   getAllNurses: async () => {
     try {
       const response = await axios.get(`${API_URL}/nurse`);
@@ -35,8 +75,6 @@ const ApiService = {
       throw new Error('Error deleting nurse');
     }
   },
-
-  // Other API functions for different endpoints...
 };
 
 export default ApiService;

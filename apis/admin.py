@@ -43,7 +43,7 @@ def create_nurse():
         )
         db.session.add(new_nurse)
         db.session.commit()
-        return jsonify({'message': 'Nurse registered successfully'})
+        return jsonify({'message': 'Nurse registered successfully','statusCode': 200})
     
     except Exception as e:
         print(f"Error creating nurse: {str(e)}")
@@ -62,7 +62,7 @@ def update_nurse(id):
             nurse.Age = data.get('Age')
             nurse.Gender = data.get('Gender')
             db.session.commit()
-            return jsonify({'message': 'Nurse updated successfully'})
+            return jsonify({'message': 'Nurse updated successfully', 'statusCode': 200})
         return {'message': 'Nurse not found'}, 404
     except Exception as e:
         print(f"Error updating nurse: {str(e)}")
@@ -152,7 +152,8 @@ def get_patient_info(patient_id):
                     'Date': schedule.time_slot.Date.strftime('%Y-%m-%d'),
                     'StartTime': schedule.time_slot.StartTime.strftime('%H:%M:%S'),
                     'EndTime': schedule.time_slot.EndTime.strftime('%H:%M:%S'),
-                    'Status': schedule.Status
+                    'Status': schedule.Status,
+                    'DoseNumber': schedule.DoseNumber
                 })
 
         vaccination_history = []
@@ -230,8 +231,12 @@ def get_nurse(nurse_id):
 @admin_bp.route('/nurse/<int:nurse_id>',methods=['DELETE'])
 def delete_nurse(nurse_id):
     nurse = Nurse.query.get(nurse_id)
+    user = nurse.user
     if nurse:
         db.session.delete(nurse)
+        db.session.commit()
+    if user:
+        db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'Nurse deleted successfully'}), 200
     else:
@@ -258,7 +263,7 @@ def get_all_patients():
         }
         patient_list.append(patient_data)
 
-    return jsonify({'patients': patient_list})
+    return jsonify(patient_list)
 
 
 @admin_bp.route('/vaccine/add', methods=['POST'])
@@ -282,4 +287,4 @@ def add_vaccine():
     )
     db.session.add(new_vaccine)
     db.session.commit()
-    return jsonify({'message': 'Vaccine added successfully'})
+    return jsonify({'message': 'Vaccine added successfully','statusCode': 200})
