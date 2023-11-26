@@ -12,6 +12,9 @@ import { Layout, Button } from 'antd';
 // import UserSettings from './UserSettings';
 import Login from './pages/login/login';
 import AuthService from './services/AuthService';
+import NurseList from './pages/admin/Nurse/nurses';
+import NurseUpdate from './pages/admin/Nurse/updateNurse';
+import ViewNurse from './pages/admin/Nurse/viewNurse';
 
 const { Header, Content } = Layout;
 
@@ -72,8 +75,10 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} /> */}
             {isAdmin && (
               <>
-                {/* <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/profile" element={<AdminProfile />} />
+                <Route path="/admin/nurse" element={<NurseList/>} />
+                <Route path="/admin/update-nurse/:id" element={<NurseUpdate/>} />
+                <Route path="/admin/nurse/:id" element={<ViewNurse/>} />
+                {/* <Route path="/admin/profile" element={<AdminProfile />} />
                 <Route path="/admin/settings" element={<AdminSettings />} /> */}
               </>
             )}
