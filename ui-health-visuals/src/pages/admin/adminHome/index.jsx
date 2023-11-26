@@ -9,12 +9,8 @@ const NurseAdminPage = () => {
     navigate("/admin/create/nurse");
   };
 
-  const handleUpdateNurseInfo = () => {
-    // Implement the logic to update nurse info
-  };
-
-  const handleDeleteNurse = () => {
-    // Implement the logic to delete a nurse
+  const handleNurseInfo = () => {
+    navigate("/admin/nurse");
   };
 
   const handleAddVaccine = () => {
@@ -23,10 +19,6 @@ const NurseAdminPage = () => {
 
   const handleVaccineInfo = () => {
     navigate("/admin/vaccines");
-  };
-
-  const handleViewNurseInfo = () => {
-    // Implement the logic to view nurse info
   };
 
   const handleViewPatientInfo = () => {
@@ -51,7 +43,7 @@ const NurseAdminPage = () => {
           <Button
             className="action-button"
             type="primary"
-            onClick={handleUpdateNurseInfo}
+            onClick={handleNurseInfo}
           >
             Nurse Info
           </Button>

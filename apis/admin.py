@@ -231,8 +231,12 @@ def get_nurse(nurse_id):
 @admin_bp.route('/nurse/<int:nurse_id>',methods=['DELETE'])
 def delete_nurse(nurse_id):
     nurse = Nurse.query.get(nurse_id)
+    user = nurse.user
     if nurse:
         db.session.delete(nurse)
+        db.session.commit()
+    if user:
+        db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'Nurse deleted successfully'}), 200
     else:
