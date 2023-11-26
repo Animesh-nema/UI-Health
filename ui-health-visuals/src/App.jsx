@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { Layout, Button } from 'antd';
-
-// import Home from './Home';
-// import Dashboard from './Dashboard';
-// import AdminDashboard from './AdminDashboard';
-// import UserDashboard from './UserDashboard';
-// import UserProfile from './UserProfile';
-// import AdminProfile from './AdminProfile';
-// import AdminSettings from './AdminSettings';
-// import UserSettings from './UserSettings';
+import './App.css';
 import Login from './pages/login/login';
 import AuthService from './services/AuthService';
 import NurseList from './pages/admin/Nurse/nurses';
 import NurseUpdate from './pages/admin/Nurse/updateNurse';
 import ViewNurse from './pages/admin/Nurse/viewNurse';
+import AdminHome from './pages/admin/adminHome';
+import RegisterNurse from './pages/admin/Nurse/CreateNurse';
+import VaccineList from './pages/admin/Vaccine';
+import AddVaccine from './pages/admin/Vaccine/addVaccine';
+import Patients from './pages/admin/patient/allPatient';
+import ViewPatient from './pages/admin/patient/viewPatient';
+import { ADMIN, NURSE } from './role';
 
 const { Header, Content } = Layout;
 
@@ -38,13 +37,13 @@ const App = () => {
   }, [user]);
 
   const isAuthenticated = !!user;
-  const isAdmin = user?.role === 'admin';
-  const isUser = user?.role === 'user';
+  const isAdmin = user?.role_id === ADMIN;
+  const isNurse = user?.role_id === NURSE;
 
   return (
     <Router>
-      <Layout>
-        <Header>
+    <Layout className="full-height">
+        <Header className="header">
           {isAuthenticated ? (
             <>
               {isAdmin && (
@@ -54,7 +53,7 @@ const App = () => {
                   <Link to="/admin/settings">Admin Settings</Link>
                 </>
               )}
-              {isUser && (
+              {isNurse && (
                 <>
                   <Link to="/user">User Dashboard</Link>
                   <Link to="/user/profile">User Profile</Link>
@@ -69,7 +68,7 @@ const App = () => {
             <Link to="/login">Login</Link>
           )}
         </Header>
-        <Content style={{ padding: '20px' }}>
+        <Content className="content">
           <Routes>
             {/* <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} /> */}
@@ -78,11 +77,18 @@ const App = () => {
                 <Route path="/admin/nurse" element={<NurseList/>} />
                 <Route path="/admin/update-nurse/:id" element={<NurseUpdate/>} />
                 <Route path="/admin/nurse/:id" element={<ViewNurse/>} />
+                <Route path="/admin" element={<AdminHome />} />
+                <Route path="/admin/create/nurse" element={<RegisterNurse/>} />
+                <Route path="/admin/create/vaccine" element={<AddVaccine/>} />
+                <Route path="/admin/vaccines" element={<VaccineList/>} />
+                <Route path="/admin/patients" element={<Patients/>} />
+                <Route path="/admin/patient/:patientId" element={<ViewPatient/>} />
+
                 {/* <Route path="/admin/profile" element={<AdminProfile />} />
                 <Route path="/admin/settings" element={<AdminSettings />} /> */}
               </>
             )}
-            {isUser && (
+            {isNurse && (
               <>
                 {/* <Route path="/user" element={<UserDashboard />} />
                 <Route path="/user/profile" element={<UserProfile />} />
