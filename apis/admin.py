@@ -58,7 +58,7 @@ def update_nurse(id):
             data = request.json
             nurse.First_Name = data.get('First_Name')
             nurse.Middle_Initial = data.get('Middle_Initial')
-            nurse.last_name = data.get('Last_Name')
+            nurse.Last_Name = data.get('Last_Name')
             nurse.Age = data.get('Age')
             nurse.Gender = data.get('Gender')
             db.session.commit()
