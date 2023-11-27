@@ -98,6 +98,46 @@ const ApiService = {
       throw new Error("Error fetching nurse");
     }
   },
+  getTimeSlots: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/time-slots`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching Timeslots");
+    }
+  },
+  scheduleNurse: async (payload) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/nurseAction/schedule-time`,
+        payload
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientDetailsWithNurse: async (nurse_id, patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/nurseAction/${nurse_id}/patient-info/${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching Timeslots");
+    }
+  },
+  recordVaccination: async (payload) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/nurseAction/record-vaccination`,
+        payload
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default ApiService;

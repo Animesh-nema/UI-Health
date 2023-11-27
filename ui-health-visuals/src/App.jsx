@@ -22,6 +22,9 @@ import ViewPatient from "./pages/admin/patient/viewPatient";
 import { ADMIN, NURSE, PATIENT } from "./role";
 import UpdateNurse from "./pages/nurse/updateNurse";
 import ViewNurseDetails from "./pages/nurse/nursedetails";
+import NurseHomePage from "./pages/nurse/nurseHome";
+import ScheduleTimePage from "./pages/nurse/scheduleTime";
+import VaccinationRecord from "./pages/nurse/record";
 
 const { Header, Content } = Layout;
 
@@ -98,17 +101,18 @@ const App = () => {
                   path="/admin/patient/:patientId"
                   element={<ViewPatient />}
                 />
-
-
               </>
             )}
             {isNurse && (
               <>
-                 <Route path="/nurse/update" element={<UpdateNurse/>} />
-                  <Route path="/nurse/nursedetails" element={<ViewNurseDetails/>}/>
-                {/* <Route path="/user" element={<UserDashboard />} />
-                <Route path="/user/profile" element={<UserProfile />} />
-                <Route path="/user/settings" element={<UserSettings />} /> */}
+                <Route path="/nurse/update" element={<UpdateNurse />} />
+                <Route
+                  path="/nurse/nursedetails"
+                  element={<ViewNurseDetails />}
+                />
+                <Route path="/nurse" element={<NurseHomePage />} />
+                <Route path="/nurse/schedule" element={<ScheduleTimePage />} />
+                <Route path="/nurse/record" element={<VaccinationRecord />} />
               </>
             )}
             {isPatient && (
@@ -125,7 +129,7 @@ const App = () => {
                   isAdmin ? (
                     <Navigate to="/admin" />
                   ) : isNurse ? (
-                    <Navigate to="/" />
+                    <Navigate to="/nurse" />
                   ) : (
                     <Navigate to="/abnd" />
                   )

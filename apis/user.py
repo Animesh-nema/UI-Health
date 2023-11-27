@@ -15,17 +15,22 @@ def login():
 
     if user and user.check_password(password):
         entity_id = None
+        name = ''
         if(user.role_id == 2):
             entity_id = user.nurses[0].EmployeeID
+            name = f"{user.nurses[0].First_Name} {user.nurses[0].Middle_Initial or ''} {user.nurses[0].Last_Name}",
+
         elif (user.role_id == 3):
              entity_id = user.patient[0].SSN
+             name = f"{user.patient[0].First_Name} {user.patient[0].Middle_Initial or ''} {user.patient[0].Last_Name}",
             
         user_data = {
             'id': user.id,
             'username': user.username,
             'email': user.email,
             'role_id': user.role_id,
-            'entity_id': entity_id
+            'entity_id': entity_id,
+            'name': name[0]
         }
         return jsonify({'success':True,'user': user_data, 'message': 'Login successful'})
     else:
