@@ -8,19 +8,15 @@ const NurseHomePage = () => {
   const navigate = useNavigate();
   const storedUser = AuthService.getUser();
   const handleUpdateNurse = () => {
-    navigate("/create/nurse");
+    navigate("/nurse/update");
   };
 
   const handleScheduleTime = () => {
     navigate("/nurse/schedule");
   };
 
-  const handleCancelTime = () => {
-    navigate("/create/vaccine");
-  };
-
   const handleScheduleAction = () => {
-    navigate("/vaccines");
+    navigate("/nurse/nursedetails");
   };
 
   const handleRecordVaccination = () => {
