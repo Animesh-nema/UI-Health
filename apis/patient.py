@@ -169,7 +169,7 @@ def update_patient(ssn):
 
     return jsonify({'message': 'Patient information updated successfully'})
 
-@patient_bp.route('/patientAction/time-slots', methods=['GET'])
+@patient_bp.route('/time-slots', methods=['GET'])
 def get_all_time_slots():
     time_slots = TimeSlot.query.all()
     if time_slots:

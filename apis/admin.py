@@ -207,7 +207,7 @@ def get_nurse(nurse_id):
         schedule_info=[]
         for schedule in nurse.nurse_schedule:
             data = {
-                'Time_slot_id':schedule.TimeSlotDetails.SlotID,
+                'Time_slot_id': schedule.TimeSlotDetails.SlotID,
                 'Date': schedule.TimeSlotDetails.Date,
                 'StartTime':schedule.TimeSlotDetails.StartTime.strftime("%H:%M:%S"),
                 'EndTime': schedule.TimeSlotDetails.EndTime.strftime("%H:%M:%S"),

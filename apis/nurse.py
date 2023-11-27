@@ -51,13 +51,16 @@ def schedule_time():
         db.session.rollback()
         return jsonify({'error': 'Internal Server Error'}), 500
     
-@nurse_bp.route('/nurseAction/patient-info/<int:patient_id>', methods=['GET'])
-def get_patient_info(patient_id):
+@nurse_bp.route('/nurseAction/<int:nurse_id>/patient-info/<int:patient_id>', methods=['GET'])
+def get_patient_info(nurse_id,patient_id):
     try:
+        nurse = Nurse.query.get(nurse_id);
         patient = Patient.query.get(patient_id)
 
         if not patient:
             return jsonify({'error': 'Patient not found'}), 404
+        if not nurse:
+            return jsonify({'error': 'Nurse not found'}), 404
 
         patient_info = {
             'SSN': patient.SSN,
@@ -65,20 +68,25 @@ def get_patient_info(patient_id):
             'Age': patient.Age,
             'Gender': patient.Gender,
             }
-
+        
+        
         scheduled_times = []
         for schedule in patient.vaccination_schedules:
             if schedule.Status == "Scheduled":
-                scheduled_times.append({
-                    'ScheduleID': schedule.ScheduleID,
-                    'VaccineName': schedule.vaccine.Name,
-                    'VaccineId': schedule.VaccineID,
-                    'TimeSlotID': schedule.TimeSlotID,
-                    'DoseNumber': schedule.DoseNumber,
-                    'Date': schedule.time_slot.Date.strftime('%Y-%m-%d'),
-                    'StartTime': schedule.time_slot.StartTime.strftime('%H:%M:%S'),
-                    'EndTime': schedule.time_slot.EndTime.strftime('%H:%M:%S'),
-                })
+                nurse_scheduled = any(
+                    ns.NurseEmployeeID == nurse_id for ns in schedule.time_slot.nurse_schedule
+                )
+                if nurse_scheduled:
+                    scheduled_times.append({
+                        'ScheduleID': schedule.ScheduleID,
+                        'VaccineName': schedule.vaccine.Name,
+                        'VaccineId': schedule.VaccineID,
+                        'TimeSlotID': schedule.TimeSlotID,
+                        'DoseNumber': schedule.DoseNumber,
+                        'Date': schedule.time_slot.Date.strftime('%Y-%m-%d'),
+                        'StartTime': schedule.time_slot.StartTime.strftime('%H:%M:%S'),
+                        'EndTime': schedule.time_slot.EndTime.strftime('%H:%M:%S'),
+                    })
 
         result = {
             'patient_info': patient_info,
