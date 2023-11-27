@@ -20,6 +20,8 @@ import AddVaccine from "./pages/admin/Vaccine/addVaccine";
 import Patients from "./pages/admin/patient/allPatient";
 import ViewPatient from "./pages/admin/patient/viewPatient";
 import { ADMIN, NURSE, PATIENT } from "./role";
+import UpdateNurse from "./pages/nurse/updateNurse";
+import ViewNurseDetails from "./pages/nurse/nursedetails";
 
 const { Header, Content } = Layout;
 
@@ -97,12 +99,13 @@ const App = () => {
                   element={<ViewPatient />}
                 />
 
-                {/* <Route path="/admin/profile" element={<AdminProfile />} />
-                <Route path="/admin/settings" element={<AdminSettings />} /> */}
+
               </>
             )}
             {isNurse && (
               <>
+                 <Route path="/nurse/update" element={<UpdateNurse/>} />
+                  <Route path="/nurse/nursedetails" element={<ViewNurseDetails/>}/>
                 {/* <Route path="/user" element={<UserDashboard />} />
                 <Route path="/user/profile" element={<UserProfile />} />
                 <Route path="/user/settings" element={<UserSettings />} /> */}

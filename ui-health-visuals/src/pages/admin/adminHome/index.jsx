@@ -59,7 +59,6 @@ const NurseAdminPage = () => {
           title={"Click here to View, Update Vacine record"}
           placement="right"
         >
-          {" "}
           <Button
             className="action-button"
             type="primary"

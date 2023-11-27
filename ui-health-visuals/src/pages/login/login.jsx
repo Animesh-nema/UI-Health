@@ -37,7 +37,9 @@ const Login = ({ onLogin }) => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        size="large"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ width: "400px" }}
       >
         <Form.Item
           label="Username"

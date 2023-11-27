@@ -8,7 +8,7 @@ const AddVaccineForm = () => {
     try {
       const response = await ApiService.addVaccine(values);
       if (response) {
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           message.success("Vaccine registered successfully");
           form.resetFields();
         } else {
