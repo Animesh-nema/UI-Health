@@ -3,6 +3,7 @@ import axios from "axios";
 const API_URL = "http://127.0.0.1:5000";
 
 const ApiService = {
+  // Admin
   registerNurse: async (payload) => {
     try {
       const response = await axios.post(`${API_URL}/nurse`, payload);
@@ -64,7 +65,7 @@ const ApiService = {
       const response = await axios.put(`${API_URL}/nurse/${id}`, data);
       return response.data;
     } catch (error) {
-      throw new Error('Error updating nurse');
+      throw new Error("Error updating nurse");
     }
   },
   deleteNurse: async (id) => {
@@ -72,7 +73,29 @@ const ApiService = {
       const response = await axios.delete(`${API_URL}/nurse/${id}`);
       return response.data;
     } catch (error) {
-      throw new Error('Error deleting nurse');
+      throw new Error("Error deleting nurse");
+    }
+  },
+  // Nurse
+  updateDetails: async (id, data) => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/nurseAction/nurse/${id}`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching nurse");
+    }
+  },
+  cancelNurseSchedule: async (nurseId, timeslotId) => {
+    try {
+      const response = await axios.delete(
+        `${API_URL}/nurseAction/nurse/${nurseId}/timeslot/${timeslotId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching nurse");
     }
   },
 };
