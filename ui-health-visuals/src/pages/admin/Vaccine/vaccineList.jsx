@@ -25,7 +25,7 @@ const VaccineList = () => {
   }, []);
 
   const showUpdateModal = (vaccine) => {
-    navigate(`/admin/vaccine/${vaccine.VaccineID}`);
+    navigate(`/admin/vaccine/update/${vaccine.VaccineID}`);
   };
 
   const columns = [

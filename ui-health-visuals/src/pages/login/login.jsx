@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Alert } from "antd";
 import AuthService from "../../services/AuthService";
+import { Link } from "react-router-dom"; 
 
 const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
@@ -62,6 +63,11 @@ const Login = ({ onLogin }) => {
           <Button type="primary" htmlType="submit" loading={loading}>
             Login
           </Button>
+          <span style={{ marginLeft: "10px" }}>
+            <Link to="/Signup">
+            <Button type="primary">Signup</Button>
+            </Link>
+          </span>
         </Form.Item>
       </Form>
     </div>

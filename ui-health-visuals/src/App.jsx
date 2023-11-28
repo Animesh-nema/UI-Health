@@ -14,7 +14,7 @@ import NurseUpdate from "./pages/admin/Nurse/updateNurse";
 import ViewNurse from "./pages/admin/Nurse/viewNurse";
 import AdminHome from "./pages/admin/adminHome";
 import RegisterNurse from "./pages/admin/Nurse/CreateNurse";
-import VaccineList from "./pages/admin/Vaccine";
+import VaccineList from "./pages/admin/Vaccine/vaccineList";
 import AddVaccine from "./pages/admin/Vaccine/addVaccine";
 import Patients from "./pages/admin/patient/allPatient";
 import ViewPatient from "./pages/admin/patient/viewPatient";
@@ -29,6 +29,9 @@ import ScheduleVaccination from "./pages/patient/scheduleAppointment";
 import UpdatePatient from "./pages/patient/updatePatient";
 import Navbar from "./pages/header/header";
 import NotFound from "./pages/notFound";
+import SignUpPatient from "./pages/login/Signup";
+import ViewPatientDetailsID from "./pages/patient/patientDetails";
+import UpdateVaccine from "./pages/admin/Vaccine/updateVaccine";
 
 const { Header, Content } = Layout;
 
@@ -77,6 +80,7 @@ const App = () => {
                 <Route path="/admin" element={<AdminHome />} />
                 <Route path="/admin/create/nurse" element={<RegisterNurse />} />
                 <Route path="/admin/create/vaccine" element={<AddVaccine />} />
+                <Route path="/admin/vaccine/update/:vaccineId" element={<UpdateVaccine/>}/>
                 <Route path="/admin/vaccines" element={<VaccineList />} />
                 <Route path="/admin/patients" element={<Patients />} />
                 <Route
@@ -105,8 +109,13 @@ const App = () => {
                   element={<ScheduleVaccination />}
                 />
                 <Route path="/patient/update" element={<UpdatePatient />} />
+                <Route
+                  path="/patient/view"
+                  element={<ViewPatientDetailsID />}
+                />
               </>
             )}
+            <Route path="/Signup" element={<SignUpPatient />} />
             <Route
               path="/"
               element={

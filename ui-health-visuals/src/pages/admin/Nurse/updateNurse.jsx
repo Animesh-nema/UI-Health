@@ -94,7 +94,7 @@ const NurseUpdate = () => {
             label="Age"
             name="Age"
             rules={[
-              { required: true,message:"Age is Required"},
+              { required: true, message: "Age is Required" },
               {
                 validator: (_, value) => {
                   const age = parseInt(value, 10);
@@ -108,12 +108,7 @@ const NurseUpdate = () => {
               },
             ]}
           >
-            <Input
-              value={nurse.Age}
-              type="number"
-              min={1}
-              max={99}
-            />
+            <Input value={nurse.Age} type="number" min={1} max={99} />
           </Form.Item>
           <Form.Item
             label="Gender"
