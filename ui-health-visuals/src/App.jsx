@@ -14,7 +14,7 @@ import NurseUpdate from "./pages/admin/Nurse/updateNurse";
 import ViewNurse from "./pages/admin/Nurse/viewNurse";
 import AdminHome from "./pages/admin/adminHome";
 import RegisterNurse from "./pages/admin/Nurse/CreateNurse";
-import VaccineList from "./pages/admin/Vaccine";
+import VaccineList from "./pages/admin/Vaccine/vaccineList";
 import AddVaccine from "./pages/admin/Vaccine/addVaccine";
 import Patients from "./pages/admin/patient/allPatient";
 import ViewPatient from "./pages/admin/patient/viewPatient";
@@ -29,6 +29,8 @@ import ScheduleVaccination from "./pages/patient/scheduleAppointment";
 import UpdatePatient from "./pages/patient/updatePatient";
 import Navbar from "./pages/header/header";
 import NotFound from "./pages/notFound";
+import SignUpPatient from "./pages/login/Signup";
+import ViewPatientDetailsID from "./pages/patient/patientDetails";
 
 const { Header, Content } = Layout;
 
@@ -105,8 +107,13 @@ const App = () => {
                   element={<ScheduleVaccination />}
                 />
                 <Route path="/patient/update" element={<UpdatePatient />} />
+                <Route
+                  path="/patient/view"
+                  element={<ViewPatientDetailsID />}
+                />
               </>
             )}
+            <Route path="/Signup" element={<SignUpPatient />} />
             <Route
               path="/"
               element={

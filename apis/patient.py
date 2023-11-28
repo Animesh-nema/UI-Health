@@ -55,9 +55,9 @@ def create_patient():
     except Exception as e:
         print(f"Error creating patient: {str(e)}")
         db.session.rollback()
-        return jsonify({'error': 'Internal Server Error'}), 500
+        return jsonify({'error': str(e)}), 500
 
-@patient_bp.route('/patientAction/patient/delete_scheduled_time/<int:id>', methods=['DELETE'])
+@patient_bp.route('/patientAction/delete_scheduled_time/<int:id>', methods=['DELETE'])
 def delete_scheduled_time(id):
     try:
         scheduled_vaccination = VaccinationSchedule.query.get(id)

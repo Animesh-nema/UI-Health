@@ -165,8 +165,26 @@ const ApiService = {
       throw new Error("Error updating nurse");
     }
   },
- 
- 
+  createPatient:async(payload)=>{
+    try{
+      const response= await axios.post(`${API_URL}/patientAction/patient`,
+      payload
+      );
+      return response.data;
+    }catch(error)
+    {
+      throw error;
+    }
+  },
+  cancelpatientSchedule: async (timeslotId) => {
+    try {
+      const response = await axios.delete(`${API_URL}/patientAction/delete_scheduled_time/${timeslotId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching patient");
+    }
+  }
 };
 
 export default ApiService;
