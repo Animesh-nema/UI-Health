@@ -91,7 +91,6 @@ const NurseList = () => {
       <h1>Nurse List</h1>
       <Spin spinning={loading}>
         <Table dataSource={nurses} columns={columns} />
-       
       </Spin>
     </div>
   );

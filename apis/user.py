@@ -12,7 +12,6 @@ def login():
     password = data.get('password')
 
     user = User.query.filter_by(username=username).first()
-
     if user and user.check_password(password):
         entity_id = None
         name = ''
@@ -20,9 +19,9 @@ def login():
             entity_id = user.nurses[0].EmployeeID
             name = f"{user.nurses[0].First_Name} {user.nurses[0].Middle_Initial or ''} {user.nurses[0].Last_Name}",
 
-        elif (user.role_id == 3):
-             entity_id = user.patient[0].SSN
-             name = f"{user.patient[0].First_Name} {user.patient[0].Middle_Initial or ''} {user.patient[0].Last_Name}",
+        elif user.role_id == 3:
+            entity_id = user.patient[0].SSN
+            name = f"{user.patient[0].First_Name} {user.patient[0].Middle_Initial or ''} {user.patient[0].Last_Name}",
             
         user_data = {
             'id': user.id,

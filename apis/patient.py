@@ -185,3 +185,21 @@ def get_all_time_slots():
         return jsonify({'time_slots': time_slot_info})
     else:
         return jsonify({'message': 'No time slots available'}), 404
+
+@patient_bp.route('/patient/time-slots', methods=['GET'])
+def get_time_slots():
+    time_slots = TimeSlot.query.all()
+    if time_slots:
+        time_slot_info = []
+        for slot in time_slots:
+            if len(slot.nurse_schedule) > 0:
+                data = {
+                    'SlotID': slot.SlotID,
+                    'Date': slot.Date.strftime("%Y-%m-%d"),
+                    'StartTime': slot.StartTime.strftime("%H:%M:%S"),
+                    'EndTime': slot.EndTime.strftime("%H:%M:%S"),
+                }
+                time_slot_info.append(data)
+        return jsonify({'time_slots': time_slot_info})
+    else:
+        return jsonify({'message': 'No time slots available'}), 404
