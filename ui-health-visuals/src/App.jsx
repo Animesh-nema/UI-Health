@@ -31,6 +31,7 @@ import Navbar from "./pages/header/header";
 import NotFound from "./pages/notFound";
 import SignUpPatient from "./pages/login/Signup";
 import ViewPatientDetailsID from "./pages/patient/patientDetails";
+import UpdateVaccine from "./pages/admin/Vaccine/updateVaccine";
 
 const { Header, Content } = Layout;
 
@@ -79,6 +80,7 @@ const App = () => {
                 <Route path="/admin" element={<AdminHome />} />
                 <Route path="/admin/create/nurse" element={<RegisterNurse />} />
                 <Route path="/admin/create/vaccine" element={<AddVaccine />} />
+                <Route path="/admin/vaccine/update/:vaccineId" element={<UpdateVaccine/>}/>
                 <Route path="/admin/vaccines" element={<VaccineList />} />
                 <Route path="/admin/patients" element={<Patients />} />
                 <Route

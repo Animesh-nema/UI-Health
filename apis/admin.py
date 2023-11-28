@@ -296,17 +296,36 @@ def update_vaccine(vaccine_id):
         vaccine = Vaccine.query.get(vaccine_id)
         if vaccine:
             data = request.json
+            vaccine.Availability = data.get('Availability', 0)
+            vaccine.OnHold = data.get('OnHold', 0)
             vaccine.Name = data.get('Name')
             vaccine.Company = data.get('Company')
-            vaccine.Name = data.get('Number_of_Doses')
-            vaccine.Number_of_Doses = data.get('Description')
-            vaccine.Description = data.get('Address')
-            vaccine.Availability = data.get('Availability', 0),
-            vaccine.OnHold =  data.get('OnHold', 0)
+            vaccine.Number_of_Doses = data.get('Number_of_Doses')
+            vaccine.Description = data.get('Description')
             db.session.commit()
-            return jsonify({'message': 'Patient updated successfully'})
-        return {'message': 'Patient not found'}, 404
+            return jsonify({'message': 'Vaccine updated successfully'})
+        return {'message': 'Vaccine not found'}, 404
     except Exception as e:
-        print(f"Error updating Patient: {str(e)}")
+        print(f"Error updating Vaccine: {str(e)}")
         db.session.rollback()
+        return jsonify({'error': 'Internal Server Error'}), 500
+    
+@admin_bp.route('/vaccine/<int:vaccine_id>', methods=['GET'])
+def get_vaccine(vaccine_id):
+    try:
+        vaccine = Vaccine.query.get(vaccine_id)
+        if vaccine:
+            vaccine_data = {
+                'VaccineID': vaccine.VaccineID,
+                'Name': vaccine.Name,
+                'Company': vaccine.Company,
+                'Number_of_Doses': vaccine.Number_of_Doses,
+                'Description': vaccine.Description,
+                'Availability': vaccine.Availability,
+                'OnHold': vaccine.OnHold
+            }
+        return jsonify(vaccine_data)
+
+    except Exception as e:
+        print(f"Error getting vaccine: {str(e)}")
         return jsonify({'error': 'Internal Server Error'}), 500

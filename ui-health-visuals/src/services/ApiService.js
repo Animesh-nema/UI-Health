@@ -20,6 +20,22 @@ const ApiService = {
       throw err;
     }
   },
+  getVaccineById: async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/vaccine/${id}`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching vaccine");
+    }
+  },
+  updateVaccine: async (id, data) => {
+    try {
+      const response = await axios.put(`${API_URL}/update_vaccine/${id}`, data);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error updating vaccine");
+    }
+  },
   addVaccine: async (payload) => {
     try {
       const response = await axios.post(`${API_URL}/vaccine/add`, payload);
@@ -159,32 +175,36 @@ const ApiService = {
   },
   updatePatient: async (id, data) => {
     try {
-      const response = await axios.put(`${API_URL}/patientAction/patient/${id}`, data);
+      const response = await axios.put(
+        `${API_URL}/patientAction/patient/${id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       throw new Error("Error updating nurse");
     }
   },
-  createPatient:async(payload)=>{
-    try{
-      const response= await axios.post(`${API_URL}/patientAction/patient`,
-      payload
+  createPatient: async (payload) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/patientAction/patient`,
+        payload
       );
       return response.data;
-    }catch(error)
-    {
+    } catch (error) {
       throw error;
     }
   },
   cancelpatientSchedule: async (timeslotId) => {
     try {
-      const response = await axios.delete(`${API_URL}/patientAction/delete_scheduled_time/${timeslotId}`
+      const response = await axios.delete(
+        `${API_URL}/patientAction/delete_scheduled_time/${timeslotId}`
       );
       return response.data;
     } catch (error) {
       throw new Error("Error fetching patient");
     }
-  }
+  },
 };
 
 export default ApiService;
