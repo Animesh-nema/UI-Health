@@ -44,9 +44,14 @@
 
 .header {
   width: 100%;
+  padding: 2px;
 }
 
 .content {
   padding: 20px;
   width: 100%;
+}
+
+.welcome{
+  padding-left: 20px;
 }

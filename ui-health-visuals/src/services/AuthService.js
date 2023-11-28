@@ -29,7 +29,7 @@ class AuthService {
   static logout() {
     localStorage.removeItem('user');
     message.success('Logout successful');
-    window.location.href = '/login'
+    window.location.href = '/'
   }
 
   static getUser() {

@@ -3,10 +3,9 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
   Navigate,
 } from "react-router-dom";
-import { Layout, Button } from "antd";
+import { Layout } from "antd";
 import "./App.css";
 import Login from "./pages/login/login";
 import AuthService from "./services/AuthService";
@@ -25,6 +24,11 @@ import ViewNurseDetails from "./pages/nurse/nursedetails";
 import NurseHomePage from "./pages/nurse/nurseHome";
 import ScheduleTimePage from "./pages/nurse/scheduleTime";
 import VaccinationRecord from "./pages/nurse/record";
+import PatientHomePage from "./pages/patient/patientHome";
+import ScheduleVaccination from "./pages/patient/scheduleAppointment";
+import UpdatePatient from "./pages/patient/updatePatient";
+import Navbar from "./pages/header/header";
+import NotFound from "./pages/notFound";
 
 const { Header, Content } = Layout;
 
@@ -55,35 +59,13 @@ const App = () => {
   return (
     <Router>
       <Layout className="full-height">
-        <Header className="header">
-          {isAuthenticated ? (
-            <>
-              {isAdmin && (
-                <>
-                  <Link to="/admin">Admin Dashboard</Link>
-                  <Link to="/admin/profile">Admin Profile</Link>
-                  <Link to="/admin/settings">Admin Settings</Link>
-                </>
-              )}
-              {isNurse && (
-                <>
-                  <Link to="/user">User Dashboard</Link>
-                  <Link to="/user/profile">User Profile</Link>
-                  <Link to="/user/settings">User Settings</Link>
-                </>
-              )}
-              <Button type="link" onClick={handleLogout}>
-                Logout
-              </Button>
-            </>
-          ) : (
-            <Link to="/login">Login</Link>
-          )}
-        </Header>
+        {isAuthenticated && (
+          <Header className="header">
+            <Navbar handleLogout={handleLogout} />
+          </Header>
+        )}
         <Content className="content">
           <Routes>
-            {/* <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} /> */}
             {isAdmin && (
               <>
                 <Route path="/admin/nurse" element={<NurseList />} />
@@ -117,13 +99,16 @@ const App = () => {
             )}
             {isPatient && (
               <>
-                {/* <Route path="/user" element={<UserDashboard />} />
-                <Route path="/user/profile" element={<UserProfile />} />
-                <Route path="/user/settings" element={<UserSettings />} /> */}
+                <Route path="/patient" element={<PatientHomePage />} />
+                <Route
+                  path="/patient/schedule"
+                  element={<ScheduleVaccination />}
+                />
+                <Route path="/patient/update" element={<UpdatePatient />} />
               </>
             )}
             <Route
-              path="/login"
+              path="/"
               element={
                 isAuthenticated ? (
                   isAdmin ? (
@@ -131,13 +116,14 @@ const App = () => {
                   ) : isNurse ? (
                     <Navigate to="/nurse" />
                   ) : (
-                    <Navigate to="/abnd" />
+                    <Navigate to="/patient" />
                   )
                 ) : (
                   <Login onLogin={handleLogin} />
                 )
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Content>
       </Layout>

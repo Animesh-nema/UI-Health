@@ -30,6 +30,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <div>
+      <h1 className="welcome">Welcome to UI Health</h1>
       <h2>Login</h2>
       {error && <Alert message={error} type="error" showIcon />}
       <Form

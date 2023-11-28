@@ -289,3 +289,24 @@ def add_vaccine():
     db.session.add(new_vaccine)
     db.session.commit()
     return jsonify({'message': 'Vaccine added successfully','statusCode': 200})
+
+@admin_bp.route('/update_vaccine/<int:vaccine_id>', methods=['PUT'])
+def update_vaccine(vaccine_id):
+    try:
+        vaccine = Vaccine.query.get(vaccine_id)
+        if vaccine:
+            data = request.json
+            vaccine.Name = data.get('Name')
+            vaccine.Company = data.get('Company')
+            vaccine.Name = data.get('Number_of_Doses')
+            vaccine.Number_of_Doses = data.get('Description')
+            vaccine.Description = data.get('Address')
+            vaccine.Availability = data.get('Availability', 0),
+            vaccine.OnHold =  data.get('OnHold', 0)
+            db.session.commit()
+            return jsonify({'message': 'Patient updated successfully'})
+        return {'message': 'Patient not found'}, 404
+    except Exception as e:
+        print(f"Error updating Patient: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Internal Server Error'}), 500
