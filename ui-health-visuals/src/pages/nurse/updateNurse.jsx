@@ -1,9 +1,7 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApiService from "../../services/ApiService";
-import { Form, Input, Button, message, Select } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Option } from "antd/es/mentions";
 import AuthService from "../../services/AuthService";
 
 const showSuccessMessage = () => {
@@ -37,7 +35,7 @@ const UpdateNurse = () => {
     };
 
     fetchNurseDetails();
-  }, [id]);
+  }, [id, form]);
 
   const onFinish = async (values) => {
     try {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Table, Spin, Button, message } from "antd";
-import { useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import AuthService from "../../services/AuthService";
 
@@ -10,14 +9,12 @@ const ViewNurseDetails = () => {
 
   const [nurseInfo, setNurseInfo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [schedule, setschedules] = useState([]);
   useEffect(() => {
     const fetchNurseInfo = async () => {
       try {
         const response = await ApiService.getNurseById(nurseId);
         if (response) {
           setNurseInfo(response);
-          // setschedules(response.s)
         }
       } catch (error) {
         console.error("Error fetching patient info:", error);

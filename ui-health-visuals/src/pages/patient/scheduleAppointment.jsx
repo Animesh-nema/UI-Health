@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select, Button, message, DatePicker, Spin } from "antd";
-import axios from "axios";
 import AuthService from "../../services/AuthService";
 import ApiService from "../../services/ApiService";
 import { useNavigate } from "react-router-dom";

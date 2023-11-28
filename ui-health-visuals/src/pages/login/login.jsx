@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Alert } from "antd";
+import { Form, Input, Button, Alert, Tooltip } from "antd";
 import AuthService from "../../services/AuthService";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
 const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,12 @@ const Login = ({ onLogin }) => {
           </Button>
           <span style={{ marginLeft: "10px" }}>
             <Link to="/Signup">
-            <Button type="primary">Signup</Button>
+              <Tooltip
+                title={"Click here to Sign up for Patient only"}
+                placement="right"
+              >
+                <Button type="primary">Signup</Button>
+              </Tooltip>
             </Link>
           </span>
         </Form.Item>

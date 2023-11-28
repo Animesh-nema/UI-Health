@@ -80,7 +80,10 @@ const App = () => {
                 <Route path="/admin" element={<AdminHome />} />
                 <Route path="/admin/create/nurse" element={<RegisterNurse />} />
                 <Route path="/admin/create/vaccine" element={<AddVaccine />} />
-                <Route path="/admin/vaccine/update/:vaccineId" element={<UpdateVaccine/>}/>
+                <Route
+                  path="/admin/vaccine/update/:vaccineId"
+                  element={<UpdateVaccine />}
+                />
                 <Route path="/admin/vaccines" element={<VaccineList />} />
                 <Route path="/admin/patients" element={<Patients />} />
                 <Route
@@ -132,7 +135,7 @@ const App = () => {
                 )
               }
             />
-            <Route path="*" element={<NotFound />} />
+            {isAuthenticated && <Route path="*" element={<NotFound />} />}
           </Routes>
         </Content>
       </Layout>

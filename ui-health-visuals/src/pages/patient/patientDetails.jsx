@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Table, Spin, Button, message } from "antd";
-import { useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import AuthService from "../../services/AuthService";
 
