@@ -55,9 +55,9 @@ def create_patient():
     except Exception as e:
         print(f"Error creating patient: {str(e)}")
         db.session.rollback()
-        return jsonify({'error': 'Internal Server Error'}), 500
+        return jsonify({'error': str(e)}), 500
 
-@patient_bp.route('/patientAction/patient/delete_scheduled_time/<int:id>', methods=['DELETE'])
+@patient_bp.route('/patientAction/delete_scheduled_time/<int:id>', methods=['DELETE'])
 def delete_scheduled_time(id):
     try:
         scheduled_vaccination = VaccinationSchedule.query.get(id)
@@ -169,7 +169,7 @@ def update_patient(ssn):
 
     return jsonify({'message': 'Patient information updated successfully'})
 
-@patient_bp.route('/patientAction/time-slots', methods=['GET'])
+@patient_bp.route('/time-slots', methods=['GET'])
 def get_all_time_slots():
     time_slots = TimeSlot.query.all()
     if time_slots:
@@ -182,6 +182,24 @@ def get_all_time_slots():
                 'EndTime': slot.EndTime.strftime("%H:%M:%S"),
             }
             time_slot_info.append(data)
+        return jsonify({'time_slots': time_slot_info})
+    else:
+        return jsonify({'message': 'No time slots available'}), 404
+
+@patient_bp.route('/patient/time-slots', methods=['GET'])
+def get_time_slots():
+    time_slots = TimeSlot.query.all()
+    if time_slots:
+        time_slot_info = []
+        for slot in time_slots:
+            if len(slot.nurse_schedule) > 0:
+                data = {
+                    'SlotID': slot.SlotID,
+                    'Date': slot.Date.strftime("%Y-%m-%d"),
+                    'StartTime': slot.StartTime.strftime("%H:%M:%S"),
+                    'EndTime': slot.EndTime.strftime("%H:%M:%S"),
+                }
+                time_slot_info.append(data)
         return jsonify({'time_slots': time_slot_info})
     else:
         return jsonify({'message': 'No time slots available'}), 404
