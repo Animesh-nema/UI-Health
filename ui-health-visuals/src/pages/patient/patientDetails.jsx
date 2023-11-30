@@ -67,6 +67,16 @@ const ViewPatientDetailsID = () => {
 
   const scheduleColumns = [
     {
+      title: "Vaccine Name",
+      dataIndex: "VaccineName",
+      key: "VaccineName",
+    },
+    {
+      title: "Dose Number",
+      dataIndex: "DoseNumber",
+      key: "DoseNumber",
+    },
+    {
       title: "Date",
       dataIndex: "Date",
       key: "Date",

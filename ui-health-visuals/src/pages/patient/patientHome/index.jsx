@@ -15,10 +15,6 @@ const PatientHomePage = () => {
     navigate("/patient/schedule");
   };
 
-  const handleScheduleAction = () => {
-    navigate("/patient/cancel");
-  };
-
   const handleViewVaccination = () => {
     navigate("/patient/view");
   };
@@ -44,16 +40,9 @@ const PatientHomePage = () => {
         <Button
           className="action-button"
           type="primary"
-          onClick={handleScheduleAction}
-        >
-          Cancel Schedule
-        </Button>
-        <Button
-          className="action-button"
-          type="primary"
           onClick={handleViewVaccination}
         >
-          View information
+          View information / Cancel Schedule
         </Button>
       </div>
     </div>
