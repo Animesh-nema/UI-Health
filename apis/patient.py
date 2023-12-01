@@ -114,7 +114,7 @@ def schedule_vaccination():
         
         recent_vaccinated_record = (
             VaccinationRecord.query
-            .filter_by(PatientSSN=patient_ssn)
+            .filter_by(PatientSSN=patient_ssn, VaccineID = vaccine_id)
             .order_by(desc(VaccinationRecord.DoseNumber))
             .first()
         )
